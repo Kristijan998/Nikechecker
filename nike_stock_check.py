@@ -113,7 +113,16 @@ def telegram(msg):
 
 def main():
     try:
-        found = get_availability(NIKE_URL)
+        html_text = fetch_html(NIKE_URL)
+        print("Dolzina odgovora:", len(html_text))
+        print("Ima __NEXT_DATA__:", "__NEXT_DATA__" in html_text)
+        print("Prvih 600 znakov:")
+        print(html_text[:600])
+        print("--- konec diagnostike ---")
+        data = extract_next_data(html_text)
+        found = {}
+        if data:
+            walk(data, found)
     except Exception as e:
         print("Napaka pri prenosu strani (mozna blokada):", e)
         sys.exit(0)
@@ -124,7 +133,7 @@ def main():
             print("  EU %s: %s" % (k, found[k]))
 
     if not found:
-        print("OPOZORILO: nisem nasel podatkov o velikostih. Zazeni z DEBUG=1.")
+        print("OPOZORILO: nisem nasel podatkov o velikostih.")
         sys.exit(0)
 
     if not TARGET_SIZE:
