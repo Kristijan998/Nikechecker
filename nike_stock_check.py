@@ -42,7 +42,6 @@ def extract_next_data(html_text):
 
 
 def find_keys(node, target_keys, results, path=""):
-    """Poisce vse kljuce iz target_keys kjerkoli v drevesu in izpise pot+vrednost."""
     if isinstance(node, dict):
         for k, v in node.items():
             if k in target_keys and not isinstance(v, (dict, list)):
@@ -60,12 +59,8 @@ def main():
         print("Ni __NEXT_DATA__ JSON.")
         sys.exit(0)
 
-    # Poisci, kako se imenujejo kljuci za velikost in zalogo
     keys_to_find = {
         "localizedSize", "nikeSize", "sizeLabel", "size", "label",
         "available", "level", "availability", "stockLevel", "inStock",
         "value", "gtin", "skuId",
     }
-    results = []
-    find_keys(data, keys_to_find, results)
-    print("Naslo %d zadetkov. Prvih 120:" %
