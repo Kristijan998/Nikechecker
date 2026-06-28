@@ -18,10 +18,15 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Namesti Playwright
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
       - name: Preveri zalogo
         env:
-          TARGET_SIZE: ${{ vars.TARGET_SIZE }}
           NIKE_URL: ${{ vars.NIKE_URL }}
+          TARGET_SIZE: ${{ vars.TARGET_SIZE }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python nike_stock_check.py
