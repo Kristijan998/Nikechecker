@@ -84,4 +84,22 @@ def main():
     target = None
     for s in sizes:
         lab = (s.get("label") or "").upper().replace(" ", "")
-        if
+        if lab == tnorm or s.get("value") == TARGET_VALUE:
+            target = s
+            break
+
+    if target is None:
+        print("Ciljne velikosti %s ni na seznamu - nic ne posljem." % TARGET_LABEL)
+        return
+
+    avail = not target.get("disabled")
+    print("CILJ %s -> %s" % (TARGET_LABEL, "NA ZALOGI" if avail else "razprodano"))
+
+    if avail and not state.get("available"):
+        telegram("\u2705 Nike AF1 Flyknit 2.0 (bela) %s je NA ZALOGI!\n%s" % (TARGET_LABEL, URL))
+        save_state({"available": True})
+    elif not avail and state.get("available"):
+        save_state({"available": False})
+
+if __name__ == "__main__":
+    main()
