@@ -1,15 +1,24 @@
-import urllib.request, json
+import urllib.request
 
 GTIN = "00192499276124"
-URL = "https://api.nike.com/deliver/available_gtins/v3/?filter=gtins(%s)" % GTIN
+URLS = [
+    "https://api.nike.com/deliver/available_gtins/v3/?filter=gtins(%s)&filter=country(SI)" % GTIN,
+    "https://api.nike.com/merch/availability/v1/?filter=productIds(AV3042-100)",
+    "https://api.nike.com/deliver/available_skus/v3/?filter=gtins(%s)" % GTIN,
+]
 
-def main():
-    req = urllib.request.Request(URL, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+def get(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=30) as r:
-            print("STATUS:", r.status)
-            print(r.read().decode("utf-8", "replace")[:2000])
+            return "OK %s: %s" % (r.status, r.read().decode("utf-8", "replace")[:800])
     except Exception as e:
-        print("NAPAKA:", e)
+        return "ERR: %s" % e
+
+def main():
+    for u in URLS:
+        print("URL:", u)
+        print(get(u))
+        print("-----")
 
 main()
